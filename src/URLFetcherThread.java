@@ -16,9 +16,10 @@ public class URLFetcherThread implements Runnable {
 
     @Override
     public void run() {
+        BufferedReader reading = null;
         try {
             URL url = new URL(urlLink);
-            BufferedReader reading = new BufferedReader(new InputStreamReader(url.openStream()));
+            reading = new BufferedReader(new InputStreamReader(url.openStream()));
             String line;
             while ((line = reading.readLine()) != null) {
                 System.out.println("Thread [" + Thread.currentThread().getName() + "]: Line from "+ urlLink +" : " + line);
@@ -28,6 +29,15 @@ public class URLFetcherThread implements Runnable {
             System.out.println("Thread [" + Thread.currentThread().getName() + "]: invalid URL - " + urlLink);
         } catch (IOException e) {
             System.out.println("Error in reading from URL - " + urlLink);
+        }
+        finally {
+            try{
+                if (reading != null){
+                    reading.close();
+                }
+            } catch (IOException e) {
+                System.out.println("Error in closing reading from URL - " + urlLink);
+            }
         }
 
 
